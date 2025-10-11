@@ -1,0 +1,15 @@
+1) Multiple types of interactable physics objects (can be trigger volumes)  [2 points]
+	Examples: Doors, teleport pads, jump pads, spawn button, elevators, launcher, etc
+
+2)  Utilize Raycasting somewhere in the game  [2 points]
+
+3) Multiple types of Prefabs used in scene setup  [2 points]
+
+4) Use of Instantiate and Destroy  [2 points]
+
+IDEA: dbd-like game. 
+- sky-camera that tracks where player is (2, 3)
+- teleporters that change player position (3)
+- if camera loses player, randomly scans maze, re-locks if within area (3)
+- breakable doors that dissapear if player runs into them fast enough (3, 4)
+- traps that slows player speed (3)
