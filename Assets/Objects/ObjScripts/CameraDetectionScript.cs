@@ -16,7 +16,6 @@ public class CameraDetectionScript : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log(watchingCamera.gameObject.name);
             CAM.setFollowPlayer();
 
         }

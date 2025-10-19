@@ -1,15 +1,12 @@
-1) Multiple types of interactable physics objects (can be trigger volumes)  [2 points]
-	Examples: Doors, teleport pads, jump pads, spawn button, elevators, launcher, etc
-
-2)  Utilize Raycasting somewhere in the game  [2 points]
-
-3) Multiple types of Prefabs used in scene setup  [2 points]
-
-4) Use of Instantiate and Destroy  [2 points]
+1) A Manager class that handles a system and interacts with objects [2 points]
+2) Multiple forms of random generation [2 points]
+	Can be multiple types of object spawning, variance on values on pre-spawned objects, or editor generation (must show in video!) 
+3) Use a Coroutine in at least one of your scripts [2 points]
+4) Pooled objects that enable/disable when activated and deactivated [2 points]
+5) Weighted random on table of output (loot box)
 
 IDEA: dbd-like game. 
-- sky-camera that tracks where player is (2, 3)
-- teleporters that change player position (3)
-- if camera loses player, randomly scans maze, re-locks if within area (3)
-- breakable doors that dissapear if player runs into them fast enough (3, 4)
-- traps that slows player speed (3)
+- camera/eye coroutine to look for player, stop coroutine if player is found (3). camera randomly scans area (2)
+- refactor level script to manage all objects within level (1)
+- light source, disable light randomly (2)
+- powerup with random locations that respawn in random locations; from a set; effect is random (4,2,5)

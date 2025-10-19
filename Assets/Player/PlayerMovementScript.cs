@@ -9,6 +9,9 @@ public class PlayerMovementScript : MonoBehaviour
     float playerSpeed = 0.025f;
     Vector3 prevPosition;
     float currentVelocity;
+
+    string currentStatus = "OK";
+    //STATES: "OK", "0.5-SPEED", "DETECTED"
     void Start()
     {   
         playerBody = GetComponent<Rigidbody>();
@@ -31,13 +34,13 @@ public class PlayerMovementScript : MonoBehaviour
         transform.Translate(transform.right * Input.GetAxis("Horizontal") * playerSpeed, Space.World);
 
         //y camera angle rotation based on player movement
-        //lock from XZ rotating so it doesnt fall over
-
-
+        //lock from Z rotating so it doesnt fall over
         float mouseX = Input.GetAxis("Mouse X") * 300f * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * 300f * Time.deltaTime;
         transform.Rotate(Vector3.up, mouseX);
+        transform.Rotate(Vector3.left, mouseY);
         Vector3 playerRotation = transform.eulerAngles;
-        transform.eulerAngles = new Vector3(0f, playerRotation.y, 0f);
+        transform.eulerAngles = new Vector3(playerRotation.x, playerRotation.y, 0f);
 
 
     }
@@ -46,6 +49,10 @@ public class PlayerMovementScript : MonoBehaviour
     {
         playerSpeed = 0.0125f;
         //Debug.Log("player speed halfed");
+        if (currentStatus != "DETECTED")
+        {
+            currentStatus = "0.5-SPEED";
+        }
         Invoke("returnNormalSpeed", 3);
 
     }
@@ -53,12 +60,25 @@ public class PlayerMovementScript : MonoBehaviour
     public void returnNormalSpeed()
     {
         playerSpeed = 0.025f;
-        //Debug.Log("player speed normal again");
+        if (currentStatus != "DETECTED")
+        {
+            currentStatus = "OK";
+        }
     }
 
     public float returnPlayerVelocity()
     {
         return currentVelocity;
+    }
+
+    public string getStatus()
+    {
+        return currentStatus;
+    }
+
+    public void setPlayerStatus(string state)
+    {
+        currentStatus = state;
     }
 }
        
