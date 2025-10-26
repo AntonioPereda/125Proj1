@@ -10,6 +10,8 @@ public class CameraScript : MonoBehaviour
 
     [SerializeField] private GameObject detectionZone;
     [SerializeField] private GameObject PLAYER;
+    bool coroutineActive = false;
+    float rotationRate = 0.25f;
 
     string cameraState = "";
 
@@ -17,6 +19,7 @@ public class CameraScript : MonoBehaviour
     {
         followingPlayer = false;
         setState();
+        coroutineActive = true;
         StartCoroutine(lookForPlayer());
         //STATES: SCANNING, FOLLOW-PLAYER
     }
@@ -24,22 +27,37 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 rayPosition = transform.position;
-        Debug.DrawRay(rayPosition, -transform.forward, Color.red, 3f);
-        Physics.Raycast(rayPosition, -transform.forward, out objectHit, float.PositiveInfinity);
-        Vector3 newPosition = new Vector3(objectHit.point[0], -2f, objectHit.point[2]);
-
-        if (followingPlayer)
+        if (PlayerPrefs.GetString("isGamePaused") == "false")
         {
-            transform.LookAt( new Vector3(PLAYER.transform.position[0], PLAYER.transform.position[1], PLAYER.transform.position[2]) );
-            transform.rotation = Quaternion.Euler(-transform.eulerAngles[0], transform.eulerAngles[1]-180, transform.eulerAngles[2]);
-            detectionZone.transform.position = new Vector3(PLAYER.transform.position[0] + 1f, -2f, PLAYER.transform.position[2]-1f);
+            if (coroutineActive == false && followingPlayer == false)
+            {
+                coroutineActive = true;
+                rotationRate = 0.25f;
+             
+            } 
+
+            Vector3 rayPosition = transform.position;
+            Debug.DrawRay(rayPosition, -transform.forward, Color.red, 3f);
+            Physics.Raycast(rayPosition, -transform.forward, out objectHit, float.PositiveInfinity);
+            Vector3 newPosition = new Vector3(objectHit.point[0], -2f, objectHit.point[2]);
+
+            if (followingPlayer)
+            {
+                transform.LookAt(new Vector3(PLAYER.transform.position[0], PLAYER.transform.position[1], PLAYER.transform.position[2]));
+                transform.rotation = Quaternion.Euler(-transform.eulerAngles[0], transform.eulerAngles[1] - 180, transform.eulerAngles[2]);
+                detectionZone.transform.position = new Vector3(PLAYER.transform.position[0] + 1f, -2f, PLAYER.transform.position[2] - 1f);
+            }
+            else
+            {
+                detectionZone.transform.position = newPosition;
+            }
+
         }
         else
         {
-            detectionZone.transform.position = newPosition;
+            rotationRate = 0f;
+            coroutineActive = false;
         }
-
     }
 
     public void setFollowPlayer()
@@ -47,6 +65,7 @@ public class CameraScript : MonoBehaviour
         StopCoroutine(lookForPlayer());
         Debug.Log("now following player!");
         followingPlayer = true;
+        coroutineActive = false;
         setState();
     }
 
@@ -54,9 +73,15 @@ public class CameraScript : MonoBehaviour
     {
         if (followingPlayer)
         {
+            detectionZone.gameObject.SetActive(false);
+            Collider detectionZoneCollider = detectionZone.GetComponent<BoxCollider>();
+            detectionZoneCollider.excludeLayers = LayerMask.NameToLayer("Everything");
             cameraState = "FOLLOW-PLAYER";
         } else
         {
+            detectionZone.gameObject.SetActive(true);
+            Collider detectionZoneCollider = detectionZone.GetComponent<BoxCollider>();
+            detectionZoneCollider.excludeLayers = LayerMask.NameToLayer("Nothing");
             cameraState = "SCANNING";
         }
 
@@ -69,32 +94,35 @@ public class CameraScript : MonoBehaviour
 
     IEnumerator lookForPlayer()
     {
-        while (true) {
-            float currentY = transform.eulerAngles[1];
-            //Debug.Log(transform.eulerAngles[1]);
-            transform.rotation = Quaternion.Euler(transform.eulerAngles[0], currentY + 0.25f, transform.eulerAngles[2]);
-            /*
-            int randX = UnityEngine.Random.Range(-21, 18);
-            int randZ = UnityEngine.Random.Range(-16, 31);
 
-            Vector3 endPos = new Vector3(randX, 0, randZ);
+        while (true)
+        {
+                float currentY = transform.eulerAngles[1];
+                //Debug.Log(transform.eulerAngles[1]);
+                transform.rotation = Quaternion.Euler(transform.eulerAngles[0], currentY + rotationRate, transform.eulerAngles[2]);
+                /*
+                int randX = UnityEngine.Random.Range(-21, 18);
+                int randZ = UnityEngine.Random.Range(-16, 31);
 
-            Vector3 startPos = objectHit.point;
-            Vector3 directionToLook = endPos - startPos;
-            Quaternion rotationToLook = Quaternion.LookRotation(directionToLook);
+                Vector3 endPos = new Vector3(randX, 0, randZ);
+
+                Vector3 startPos = objectHit.point;
+                Vector3 directionToLook = endPos - startPos;
+                Quaternion rotationToLook = Quaternion.LookRotation(directionToLook);
 
 
-            float elapsedTime = 0f;
-            const float rotationDuration = 5f;
-            while (elapsedTime < rotationDuration)
-            {
-                transform.rotation = Quaternion.Slerp(transform.rotation, rotationToLook, elapsedTime/rotationDuration);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-            transform.rotation = rotationToLook;
-            */
-            yield return null;
+                float elapsedTime = 0f;
+                const float rotationDuration = 5f;
+                while (elapsedTime < rotationDuration)
+                {
+                    transform.rotation = Quaternion.Slerp(transform.rotation, rotationToLook, elapsedTime/rotationDuration);
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
                 }
+                transform.rotation = rotationToLook;
+                */
+                yield return null;
+        }
+
     }
 }

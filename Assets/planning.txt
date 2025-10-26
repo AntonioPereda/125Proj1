@@ -1,12 +1,15 @@
-1) A Manager class that handles a system and interacts with objects [2 points]
-2) Multiple forms of random generation [2 points]
-	Can be multiple types of object spawning, variance on values on pre-spawned objects, or editor generation (must show in video!) 
-3) Use a Coroutine in at least one of your scripts [2 points]
-4) Pooled objects that enable/disable when activated and deactivated [2 points]
-5) Weighted random on table of output (loot box)
+1) A Main Menu with buttons for start, options, and credits [must have] --
+2) Options Menu with at least 2 functioning options [2 points] --
+3) Credits Menu with references to third party content [2 points] --
+4) A Game Over Menu, can be for win, lose, or both [2 points] --
+5) In game GUI/HUD (health bar, ammo, items collected, etc) [2 points] --
+
+6) Functioning Pause MENU (actually pauses all gameplay) --
+
 
 IDEA: dbd-like game. 
-- camera/eye coroutine to look for player, stop coroutine if player is found (3). camera randomly scans area (2)
-- refactor level script to manage all objects within level (1)
-- light source, disable light randomly (2)
-- powerup with random locations that respawn in random locations; from a set; effect is random (4,2,5)
+2) FOV & WASD controls
+	2a) NVM WHY CANT WE CHANGE GETAXIS CONTROLS RAHHH UNITY
+	2b) Instead: FOV & Mouse Sens
+5) time elapsed
+6) as is

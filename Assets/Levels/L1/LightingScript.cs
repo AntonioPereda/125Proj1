@@ -17,7 +17,7 @@ public class LightingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isLightOn)
+        if (isLightOn && PlayerPrefs.GetString("isGamePaused") == "false")
         {
             frameCount++;
             if (frameCount >= 1000)

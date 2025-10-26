@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class L1Manager : MonoBehaviour
 {
@@ -32,6 +34,7 @@ public class L1Manager : MonoBehaviour
 
     void Start()
     {
+        PlayerPrefs.SetString("isGamePaused", "false");
         thePlayer = PLAYER.GetComponent<PlayerMovementScript>();
         theCamera = CAMERA.GetComponent<CameraScript>();
 
@@ -81,29 +84,48 @@ public class L1Manager : MonoBehaviour
 
     void Update()
     {
-        playerSTATUS = thePlayer.getStatus();
-        cameraSTATUS = theCamera.getStatus();
-
-        frameCount++;
-        //Debug.Log(frameCount);
-        if (frameCount >= 1000)
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            frameCount = 0;
-            for (int i = 0; i < PowerupManagerScript.getMaxNumber(); i++)
+            if (PlayerPrefs.GetString("isGamePaused") == "false")
             {
-                if (PowerupManagerScript.pooledPowerups[i].activeSelf == false)
-                {   
-                    GameObject disabledPowerup = PowerupManagerScript.pooledPowerups[i];
-                    powerupLocations.Add(disabledPowerup.transform.position);
-                    if (UnityEngine.Random.Range(0, 1) == 0)
-                    {
-                        enableAndSpawnPowerup();
-                    }
-
-                } 
+                Time.timeScale = 0f; //pause the game
+                PlayerPrefs.SetString("isGamePaused", "true");
+                UnityEngine.SceneManagement.SceneManager.LoadScene(5, LoadSceneMode.Additive);
+            } else
+            {
+                Time.timeScale = 1f; //unpause the game
+                PlayerPrefs.SetString("isGamePaused", "false");
+                UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(5);
 
             }
+        }
 
+        if (PlayerPrefs.GetString("isGamePaused") == "false")
+        {
+            playerSTATUS = thePlayer.getStatus();
+            cameraSTATUS = theCamera.getStatus();
+
+            frameCount++;
+            //Debug.Log(frameCount);
+            if (frameCount >= 1000)
+            {
+                frameCount = 0;
+                for (int i = 0; i < PowerupManagerScript.getMaxNumber(); i++)
+                {
+                    if (PowerupManagerScript.pooledPowerups[i].activeSelf == false)
+                    {
+                        GameObject disabledPowerup = PowerupManagerScript.pooledPowerups[i];
+                        powerupLocations.Add(disabledPowerup.transform.position);
+                        if (UnityEngine.Random.Range(0, 1) == 0)
+                        {
+                            enableAndSpawnPowerup();
+                        }
+
+                    }
+
+                }
+
+            }
         }
 
 
@@ -174,6 +196,7 @@ public class L1Manager : MonoBehaviour
         powerupLocations.Remove(randomLocation);
 
     }
+
     
     
 
