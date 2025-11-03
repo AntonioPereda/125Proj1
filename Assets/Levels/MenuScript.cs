@@ -18,6 +18,11 @@ public class MenuScript : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneID);
     }
 
+    private void Start()
+    {
+
+    }
+
     public void updatePlayerFOV()
     {
 

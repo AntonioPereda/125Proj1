@@ -3,6 +3,7 @@ using UnityEngine;
 public class DestroyableWallScript : MonoBehaviour
 {
     [SerializeField] private GameObject destroyableWall;
+    public AudioSource wallDestroyed;
 
     private void Start()
     {
@@ -17,6 +18,7 @@ public class DestroyableWallScript : MonoBehaviour
             if (playerMovement.returnPlayerVelocity() > 5.0)
             {
                 Debug.Log("Destroyed!");
+                wallDestroyed.Play();
                 Destroy(gameObject);
             }
 

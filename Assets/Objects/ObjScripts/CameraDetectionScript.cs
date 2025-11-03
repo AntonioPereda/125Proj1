@@ -13,9 +13,10 @@ public class CameraDetectionScript : MonoBehaviour
     }
     private void OnTriggerEnter(Collider collision)
     {
-
-        if (collision.gameObject.CompareTag("Player") && PlayerPrefs.GetString("isGamePaused") == "false")
+        Debug.Log(collision.gameObject.name);
+        if (collision.gameObject.CompareTag("Player"))
         {
+            Debug.Log("Player found");
             CAM.setFollowPlayer();
 
         }

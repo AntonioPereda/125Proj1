@@ -6,7 +6,6 @@ using UnityEngine;
 public class PowerupScript : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    string pickupEffect = "";
     int powerupID = -1;
     void Start()
     {
@@ -25,8 +24,5 @@ public class PowerupScript : MonoBehaviour
     {
         powerupID = i;
     }
-    public void setPowerupEffect(string effect)
-    {
-        pickupEffect = effect;
-    }
+
 }

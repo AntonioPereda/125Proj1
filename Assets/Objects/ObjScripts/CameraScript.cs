@@ -11,13 +11,18 @@ public class CameraScript : MonoBehaviour
     [SerializeField] private GameObject detectionZone;
     [SerializeField] private GameObject PLAYER;
     bool coroutineActive = false;
-    float rotationRate = 0.25f;
+    //float rotationRate = 0.25f;
+    public AudioSource cameraSound;
+    Collider detectionZoneCollider;
+    float randXDir;
+    float randZDir;
 
     string cameraState = "";
 
     void Start()
     {
         followingPlayer = false;
+        detectionZoneCollider = detectionZone.GetComponent<BoxCollider>();
         setState();
         coroutineActive = true;
         StartCoroutine(lookForPlayer());
@@ -32,7 +37,6 @@ public class CameraScript : MonoBehaviour
             if (coroutineActive == false && followingPlayer == false)
             {
                 coroutineActive = true;
-                rotationRate = 0.25f;
              
             } 
 
@@ -55,7 +59,6 @@ public class CameraScript : MonoBehaviour
         }
         else
         {
-            rotationRate = 0f;
             coroutineActive = false;
         }
     }
@@ -69,19 +72,37 @@ public class CameraScript : MonoBehaviour
         setState();
     }
 
+    public void setLookForPlayer()
+    {
+        StartCoroutine(lookForPlayer());
+        Debug.Log("now looking for player!");
+        followingPlayer = false;
+        coroutineActive = true;
+
+        var randX = UnityEngine.Random.Range(-78f, 78f);
+        var randY = UnityEngine.Random.Range(-30f, 32f);
+        var pointToLookAt = new Vector3(randX, 0, randY);
+        transform.LookAt(pointToLookAt);
+        transform.rotation = Quaternion.Euler(-transform.eulerAngles[0], transform.eulerAngles[1] - 180, transform.eulerAngles[2]);
+
+
+        setState();
+    }
+
     public void setState()
     {
         if (followingPlayer)
         {
+            Debug.Log("setting to follow player");
             detectionZone.gameObject.SetActive(false);
-            Collider detectionZoneCollider = detectionZone.GetComponent<BoxCollider>();
-            detectionZoneCollider.excludeLayers = LayerMask.NameToLayer("Everything");
+            detectionZoneCollider.excludeLayers = LayerMask.GetMask("Everything");
             cameraState = "FOLLOW-PLAYER";
+            cameraSound.Play();
         } else
         {
+            Debug.Log("setting to scan for player");
             detectionZone.gameObject.SetActive(true);
-            Collider detectionZoneCollider = detectionZone.GetComponent<BoxCollider>();
-            detectionZoneCollider.excludeLayers = LayerMask.NameToLayer("Nothing");
+            detectionZoneCollider.excludeLayers = LayerMask.GetMask("Nothing");
             cameraState = "SCANNING";
         }
 
@@ -94,35 +115,58 @@ public class CameraScript : MonoBehaviour
 
     IEnumerator lookForPlayer()
     {
+        randXDir = UnityEngine.Random.Range(0.01f, 0.1f);
+        randZDir = UnityEngine.Random.Range(0.01f, 0.1f);
+        var pointX = objectHit.point[0];
+        var pointZ = objectHit.point[2];
 
         while (true)
         {
-                float currentY = transform.eulerAngles[1];
-                //Debug.Log(transform.eulerAngles[1]);
-                transform.rotation = Quaternion.Euler(transform.eulerAngles[0], currentY + rotationRate, transform.eulerAngles[2]);
-                /*
-                int randX = UnityEngine.Random.Range(-21, 18);
-                int randZ = UnityEngine.Random.Range(-16, 31);
-
-                Vector3 endPos = new Vector3(randX, 0, randZ);
-
-                Vector3 startPos = objectHit.point;
-                Vector3 directionToLook = endPos - startPos;
-                Quaternion rotationToLook = Quaternion.LookRotation(directionToLook);
-
-
-                float elapsedTime = 0f;
-                const float rotationDuration = 5f;
-                while (elapsedTime < rotationDuration)
+                pointX += randXDir;
+                pointZ += randZDir;
+                var pointToLookAt = new Vector3(pointX, 0, pointZ);
+                transform.LookAt(pointToLookAt);
+                transform.rotation = Quaternion.Euler(-transform.eulerAngles[0], transform.eulerAngles[1] - 180, transform.eulerAngles[2]);
+                
+                if (pointX >= 78 || pointX <= -78)
                 {
-                    transform.rotation = Quaternion.Slerp(transform.rotation, rotationToLook, elapsedTime/rotationDuration);
-                    elapsedTime += Time.deltaTime;
-                    yield return null;
+                    if (pointX > 0)
+                    {
+                        randXDir = UnityEngine.Random.Range(0.01f, 0.1f) * -1;
+                    }
+                    else
+                    {
+                        randXDir = UnityEngine.Random.Range(0.01f, 0.1f);
+                    }
                 }
-                transform.rotation = rotationToLook;
-                */
-                yield return null;
+
+                if (pointZ >= 30 || pointZ <= -32)
+                {
+                    if (pointZ > 0)
+                    {
+                        randZDir = UnityEngine.Random.Range(0.01f, 0.1f) *-1;
+                    } else
+                    {
+                        randZDir = UnityEngine.Random.Range(0.01f, 0.1f);
+                    }
+                    
+                }
+
+                if (UnityEngine.Random.Range(1, 1000) == 1)
+                {
+                    randXDir = UnityEngine.Random.Range(0.01f, 0.1f) * -Mathf.Sign(randXDir);
+                } else if (UnityEngine.Random.Range(1, 1000) == 1000)
+                {
+                    randZDir = UnityEngine.Random.Range(0.01f, 0.1f) * -Mathf.Sign(randZDir);
+                }
+
+            yield return null;
         }
 
     }
 }
+
+/*
+ 
+ 78,30.1 - -78, -32
+ */

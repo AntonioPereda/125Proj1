@@ -7,7 +7,7 @@ public class escapeZoneScript : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(3);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(6);
 
         }
     }

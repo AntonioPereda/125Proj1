@@ -1,15 +1,11 @@
-1) A Main Menu with buttons for start, options, and credits [must have] --
-2) Options Menu with at least 2 functioning options [2 points] --
-3) Credits Menu with references to third party content [2 points] --
-4) A Game Over Menu, can be for win, lose, or both [2 points] --
-5) In game GUI/HUD (health bar, ammo, items collected, etc) [2 points] --
+WHATS LEFT FOR: dbd-like game. 
 
-6) Functioning Pause MENU (actually pauses all gameplay) --
+1) add sound (make sure to credit) --
+2) finish camera --
+4) polish level --
 
-
-IDEA: dbd-like game. 
-2) FOV & WASD controls
-	2a) NVM WHY CANT WE CHANGE GETAXIS CONTROLS RAHHH UNITY
-	2b) Instead: FOV & Mouse Sens
-5) time elapsed
-6) as is
+3) finish "green thingies" and make "generated dynamically based on the player" + game logic
+	* caught by camera -> 30 sec timer
+	* green thingies randomly spawn via gen of player location
+	* dont get all 5 = game over
+	* get all 5 = camera is forced off you, timer stops/resets
